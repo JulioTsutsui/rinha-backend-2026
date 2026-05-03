@@ -1,7 +1,14 @@
 {
-    "participants": ["Julio Tsutsui"],
-    "social": ["https://github.com/JulioTsutsui"],
-    "source-code-repo": "REPLACE_WITH_YOUR_PUBLIC_REPO_URL",
-    "stack": ["go", "nginx"],
+    "participants": [
+        "Julio Tsutsui"
+    ],
+    "social": [
+        "https://github.com/JulioTsutsui"
+    ],
+    "source-code-repo": "https://github.com/JulioTsutsui/rinha-backend-2026",
+    "stack": [
+        "go",
+        "nginx"
+    ],
     "open_to_work": true
 }
