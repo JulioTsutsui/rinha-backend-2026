@@ -10,8 +10,7 @@ import (
 const VecDim = 14
 
 var referenceList = []RefData{}
-var flatRefs []float32
-var flatLabels []string
+var ivfIndex *IVFIndex
 var normalizer = Normalizer{}
 var mccrisk = make(map[string]float32)
 
@@ -54,15 +53,17 @@ func loadDataset() error {
 	// OPTIMIZATION: pack into flat layout, then release the original []RefData
 	// so we don't carry both copies in RAM (the box only has 8 GB).
 	n := len(referenceList)
-	flatRefs = make([]float32, n*VecDim)
-	flatLabels = make([]string, n)
+	flat := make([]float32, n*VecDim)
+	labels := make([]string, n)
 	for i, r := range referenceList {
-		copy(flatRefs[i*VecDim:(i+1)*VecDim], r.Vector)
-		flatLabels[i] = r.Label
+		copy(flat[i*VecDim:(i+1)*VecDim], r.Vector)
+		labels[i] = r.Label
 	}
 	referenceList = nil
 
-	fmt.Println("Dataset loaded:", n, "refs in flat layout")
+	ivfIndex = BuildIVF(flat, labels, n)
+
+	fmt.Println("Dataset loaded:", n, "refs into IVF index (K=", IVFK, ")")
 	return nil
 }
 

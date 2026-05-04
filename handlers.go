@@ -21,11 +21,10 @@ func fraudScoreHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	ctx := FraudScoreContext{
-		req:        req,
-		norm:       normalizer,
-		mcc_risk:   mccrisk,
-		flatRefs:   flatRefs,
-		flatLabels: flatLabels,
+		req:      req,
+		norm:     normalizer,
+		mcc_risk: mccrisk,
+		index:    ivfIndex,
 	}
 
 	fs := FraudScoreCalculator(ctx)

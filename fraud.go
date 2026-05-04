@@ -2,7 +2,6 @@ package main
 
 import (
 	"slices"
-	"sort"
 	"time"
 )
 
@@ -37,60 +36,11 @@ func FraudScoreCalculator(ctx FraudScoreContext) FraudScoreResponse {
 		Limitar(float32(req.Merchant.AvgAmount) / norm.MaxMerchantAvgAmount),
 	}
 
-	type distlist struct {
-		id    int
-		label string
-		dist  float32
-	}
-
-	asc := true // euclidean (squared): smaller = closer
-
-	n := len(ctx.flatLabels)
-	top := make([]distlist, 0, TOP_K)
-	worstIdx := 0
-	for i := 0; i < n; i++ {
-		refVec := ctx.flatRefs[i*VecDim : (i+1)*VecDim]
-		d := distlist{
-			dist:  EuclideanDistance(vec, refVec),
-			id:    i,
-			label: ctx.flatLabels[i],
-		}
-
-		if len(top) < TOP_K {
-			top = append(top, d)
-			if len(top) == TOP_K {
-				for j := 1; j < TOP_K; j++ {
-					if (asc && top[j].dist > top[worstIdx].dist) || (!asc && top[j].dist < top[worstIdx].dist) {
-						worstIdx = j
-					}
-				}
-			}
-			continue
-		}
-
-		better := (asc && d.dist < top[worstIdx].dist) || (!asc && d.dist > top[worstIdx].dist)
-		if !better {
-			continue
-		}
-		top[worstIdx] = d
-		worstIdx = 0
-		for j := 1; j < TOP_K; j++ {
-			if (asc && top[j].dist > top[worstIdx].dist) || (!asc && top[j].dist < top[worstIdx].dist) {
-				worstIdx = j
-			}
-		}
-	}
-
-	sort.Slice(top, func(i, j int) bool {
-		if asc {
-			return top[i].dist < top[j].dist
-		}
-		return top[i].dist > top[j].dist
-	})
+	labels := ctx.index.SearchTopK(vec, TOP_K)
 
 	fraud := 0
-	for _, v := range top {
-		if v.label == "fraud" {
+	for _, l := range labels {
+		if l == "fraud" {
 			fraud++
 		}
 	}

@@ -1,4 +1,4 @@
-FROM golang:1.26-alpine AS build
+FROM --platform=linux/amd64 golang:1.26-alpine AS build
 
 WORKDIR /build
 
@@ -12,7 +12,7 @@ RUN GOAMD64=v3 CGO_ENABLED=0 go build \
       -pgo=auto \
       -o /out/server .
 
-FROM alpine:3.20
+FROM --platform=linux/amd64 alpine:3.20
 
 WORKDIR /app/bin
 COPY --from=build /out/server /app/bin/server

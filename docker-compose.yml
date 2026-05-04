@@ -15,7 +15,7 @@ services:
       resources:
         limits:
           cpus: "0.10"
-          memory: "50MB"
+          memory: "30MB"
 
   api1:
     build:
@@ -28,7 +28,7 @@ services:
       resources:
         limits:
           cpus: "0.45"
-          memory: "150MB"
+          memory: "160MB"
 
   api2:
     build:
@@ -41,7 +41,7 @@ services:
       resources:
         limits:
           cpus: "0.45"
-          memory: "150MB"
+          memory: "160MB"
 
 networks:
   rinha-net:

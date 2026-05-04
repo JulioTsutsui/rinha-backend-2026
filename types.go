@@ -67,6 +67,5 @@ type FraudScoreContext struct {
 	// OPTIMIZATION: flat layout — all reference vectors concatenated into one
 	// []float32 of length VecDim*N for better cache locality (no per-row pointer
 	// chase). Labels live in a parallel slice indexed identically.
-	flatRefs   []float32
-	flatLabels []string
+	index *IVFIndex
 }
