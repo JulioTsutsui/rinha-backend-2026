@@ -18,8 +18,10 @@ services:
           memory: "30MB"
 
   api1:
-    image: jtsutsui/rinha-go-2026
+    image: jtsutsui/rinha-go-2026:0.1.0
     container_name: rinha-api1
+    environment:
+      GOMAXPROCS: "1"
     networks:
       - rinha-net
     deploy:
@@ -29,8 +31,10 @@ services:
           memory: "160MB"
 
   api2:
-    image: jtsutsui/rinha-go-2026
+    image: jtsutsui/rinha-go-2026:0.1.0
     container_name: rinha-api2
+    environment:
+      GOMAXPROCS: "1"
     networks:
       - rinha-net
     deploy:
